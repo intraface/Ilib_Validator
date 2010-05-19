@@ -237,7 +237,7 @@ class Ilib_Validator {
             return true;
         }
 
-        if (ereg("^[a-zA-Z0-9]+$", $password)) {
+        if (preg_match("/^[a-zA-Z0-9]+$/", $password)) {
             if (strlen($password) >= intval($min_length) && strlen($password) <= intval($max_length)) {
                 return true;
             }
@@ -318,7 +318,7 @@ class Ilib_Validator {
 
         if (in_array('allow_empty', $params) !== false && empty($number)) {
             return true;
-        } elseif (ereg("^-?[0-9]+(\.[0-9]{3})*(,[0-9]{1,2})?$", $number)) {
+        } elseif (preg_match("/^-?[0-9]+(\.[0-9]{3})*(,[0-9]{1,2})?$/", $number)) {
 
             // $^
             $number = str_replace(".", "", $number);
@@ -362,7 +362,7 @@ class Ilib_Validator {
         $params = $this->parseParams($params, array('allow_empty'));
         if (in_array('allow_empty', $params) !== false && empty($string)) {
             return true;
-        } elseif (eregi("^[a-z0-9_-]+$", $string)) {
+        } elseif (preg_match("/^[a-z0-9_-]+$/", $string)) {
             return true;
         }
         return false;
