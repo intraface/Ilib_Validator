@@ -20,7 +20,7 @@ class Ilib_Validator {
      * @var object
      */
     private $error;
-    
+
     /**
      * @var array options
      */
@@ -35,16 +35,15 @@ class Ilib_Validator {
      */
     public function __construct($error = NULL, $options = array())
     {
-        if($error != NULL) {
+        if ($error != NULL) {
             $this->error = $error;
-        }
-        else {
+        } else {
             $this->error = new Ilib_Error;
         }
-        
+
         $default_options = array('connection_internet' => true);
         $this->option = array_merge($default_options, $options);
-        
+
     }
 
     /**
@@ -58,9 +57,9 @@ class Ilib_Validator {
      * @return boolean true or false
      */
     public function isEmail($email, $msg = '', $params = '') {
-        
+
         $params = $this->parseParams($params, array('allow_empty'));
-        
+
         if (in_array('allow_empty', $params) AND empty($email)) {
             return true;
         }
@@ -96,18 +95,16 @@ class Ilib_Validator {
         // m: 01-12, 1-12
         // y: 0000-9999, 01-99, 1-99
 
-        /**
-         * HUSK AT RETTE I BÅDE VALIDATOR OG DATE
-         */
+        // HUSK AT RETTE I BÅDE VALIDATOR OG DATE
 
         $d = "([0-3]?[0-9])";
         $m = "([0-1]?[0-9])";
         $y = "([0-9][0-9][0-9][0-9]|[0-9]?[0-9])";
         $s = "(-|\.|/| )";
 
-        if(ereg("^".$d.$s.$m.$s.$y."$", $date, $parts)) {
+        if (preg_match_all("/^".$d.$s.$m.$s.$y."$/", $date, $parts)) {
             // true
-        } elseif(ereg("^".$d.$s.$m."$", $date, $parts) && in_array("allow_no_year", $params) !== false) {
+        } elseif (preg_match_all("/^".$d.$s.$m."$/", $date, $parts) && in_array("allow_no_year", $params) !== false) {
             $parts[5] = date("Y");
             // true
         } else {
@@ -115,7 +112,7 @@ class Ilib_Validator {
             return false;
         }
 
-        if(checkdate($parts[3], $parts[1], $parts[5])) {
+        if (checkdate($parts[3], $parts[1], $parts[5])) {
             return true;
         } else {
             $this->error->set($msg);
@@ -152,10 +149,10 @@ class Ilib_Validator {
         $s = "([0-5][0-9])";
         $i = "(\:)";
 
-        if(ereg("^".$t.$i.$m.$i.$s."$", $time, $parts)) {
+        if (preg_match_all("/^".$t.$i.$m.$i.$s."$/", $time, $parts)) {
             // true
 
-        } elseif(ereg("^".$t.$i.$m."$", $time, $parts) && in_array("must_have_second", $params) === false) {
+        } elseif (preg_match_all("/^".$t.$i.$m."$/", $time, $parts) && in_array("must_have_second", $params) === false) {
 
             $parts[5] = '00';
             // true
@@ -164,7 +161,7 @@ class Ilib_Validator {
             return(false);
         }
 
-        if(intval($parts[1] > 23)) {
+        if (intval($parts[1] > 23)) {
             $this->error->set($msg);
             return false;
         } else {
@@ -236,12 +233,12 @@ class Ilib_Validator {
     public function isPassword($password, $min_length, $max_length, $msg = "", $params = "") {
 
         $params = $this->parseParams($params, array('allow_empty'));
-        if(in_array('allow_empty', $params) !== false && empty($password)) {
+        if (in_array('allow_empty', $params) !== false && empty($password)) {
             return true;
         }
 
-        if(ereg("^[a-zA-Z0-9]+$", $password)) {
-            if(strlen($password) >= intval($min_length) && strlen($password) <= intval($max_length)) {
+        if (preg_match_all("/^[a-zA-Z0-9]+$/", $password)) {
+            if (strlen($password) >= intval($min_length) && strlen($password) <= intval($max_length)) {
                 return true;
             }
         }
@@ -271,24 +268,24 @@ class Ilib_Validator {
 
         if (in_array('allow_empty', $params) !== false && empty($string)) {
             return true;
-        } elseif(is_numeric($string)) {
+        } elseif (is_numeric($string)) {
 
-            if(in_array('integer', $params) !== false) {
-                if(intval($string) != $string) {
+            if (in_array('integer', $params) !== false) {
+                if (intval($string) != $string) {
                     $this->error->set($msg);
                     return false;
                 }
             }
 
-            if(in_array('zero_or_greater', $params) !== false) {
-                if($string >= 0) {
+            if (in_array('zero_or_greater', $params) !== false) {
+                if ($string >= 0) {
                     return true;
                 } else {
                     $this->error->set($msg);
                     return false;
                 }
-            } elseif(in_array('greater_than_zero', $params) !== false) {
-                if($string > 0) {
+            } elseif (in_array('greater_than_zero', $params) !== false) {
+                if ($string > 0) {
                     return true;
                 } else {
                     $this->error->set($msg);
@@ -321,22 +318,22 @@ class Ilib_Validator {
 
         if (in_array('allow_empty', $params) !== false && empty($number)) {
             return true;
-        } elseif(ereg("^-?[0-9]+(\.[0-9]{3})*(,[0-9]{1,2})?$", $number)) {
+        } elseif (preg_match_all("/^-?[0-9]+(\.[0-9]{3})*(,[0-9]{1,2})?$/", $number)) {
 
             // $^
             $number = str_replace(".", "", $number);
             $number = str_replace(",", ".", $number);
             settype($number, "double");
 
-            if(in_array('zero_or_greater', $params) !== false) {
-                if($number >= 0) {
+            if (in_array('zero_or_greater', $params) !== false) {
+                if ($number >= 0) {
                     return true;
                 } else {
                     $this->error->set($msg);
                     return false;
                 }
-            } elseif(in_array('greater_than_zero', $params) !== false) {
-                if($number > 0) {
+            } elseif (in_array('greater_than_zero', $params) !== false) {
+                if ($number > 0) {
                     return true;
                 } else {
                     $this->error->set($msg);
@@ -365,16 +362,15 @@ class Ilib_Validator {
         $params = $this->parseParams($params, array('allow_empty'));
         if (in_array('allow_empty', $params) !== false && empty($string)) {
             return true;
-        } elseif (eregi("^[a-z0-9_-]+$", $string)) {
+        } elseif (preg_match_all("/^[a-z0-9_-]+$/", $string)) {
             return true;
         }
         return false;
     }
-    
-    
+
     /**
      * parses the params and returns an array
-     * 
+     *
      * @param string $params with the params to be parsed
      * @param array $valid_params an array with the valid params
      * @return array with valid params
@@ -383,19 +379,17 @@ class Ilib_Validator {
     {
         $params = explode(",", $param);
         $params = array_filter($params, 'trim');
-        
-        if(!is_array($valid_params)) {
+
+        if (!is_array($valid_params)) {
             throw new Exception('second parameter in Ilib_Validator->parseParams needs to be an array');
             exit;
         }
-        
+
         $used_valid_params = array_intersect($params, $valid_params);
-        if(count($used_valid_params) != count($params)) {
+        if (count($used_valid_params) != count($params)) {
             throw new Exception('Invalid param '.implode(', ', array_diff($params, $used_valid_params)));
             exit;
-        } 
+        }
         return $used_valid_params;
     }
 }
-
-?>
