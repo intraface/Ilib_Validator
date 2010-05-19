@@ -3,7 +3,7 @@ error_reporting(0);
 
 require_once 'PHPUnit/Framework.php';
 
-require_once 'Ilib/Validator.php';
+require_once '../src/Ilib/Validator.php';
 require_once 'Ilib/Error.php';
 
 class Ilib_ValidatorTest extends PHPUnit_Framework_TestCase
