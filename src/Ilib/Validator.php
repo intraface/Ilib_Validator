@@ -102,9 +102,9 @@ class Ilib_Validator {
         $y = "([0-9][0-9][0-9][0-9]|[0-9]?[0-9])";
         $s = "(-|\.|/| )";
 
-        if (preg_match_all("/^".$d.$s.$m.$s.$y."$/", $date, $parts)) {
+        if (ereg("^".$d.$s.$m.$s.$y."$", $date, $parts)) {
             // true
-        } elseif (preg_match_all("/^".$d.$s.$m."$/", $date, $parts) && in_array("allow_no_year", $params) !== false) {
+        } elseif (ereg("^".$d.$s.$m."$", $date, $parts) && in_array("allow_no_year", $params) !== false) {
             $parts[5] = date("Y");
             // true
         } else {
@@ -149,10 +149,10 @@ class Ilib_Validator {
         $s = "([0-5][0-9])";
         $i = "(\:)";
 
-        if (preg_match_all("/^".$t.$i.$m.$i.$s."$/", $time, $parts)) {
+        if (ereg("^".$t.$i.$m.$i.$s."$", $time, $parts)) {
             // true
 
-        } elseif (preg_match_all("/^".$t.$i.$m."$/", $time, $parts) && in_array("must_have_second", $params) === false) {
+        } elseif (ereg("^".$t.$i.$m."$", $time, $parts) && in_array("must_have_second", $params) === false) {
 
             $parts[5] = '00';
             // true
@@ -237,7 +237,7 @@ class Ilib_Validator {
             return true;
         }
 
-        if (preg_match_all("/^[a-zA-Z0-9]+$/", $password)) {
+        if (ereg("^[a-zA-Z0-9]+$", $password)) {
             if (strlen($password) >= intval($min_length) && strlen($password) <= intval($max_length)) {
                 return true;
             }
@@ -318,7 +318,7 @@ class Ilib_Validator {
 
         if (in_array('allow_empty', $params) !== false && empty($number)) {
             return true;
-        } elseif (preg_match_all("/^-?[0-9]+(\.[0-9]{3})*(,[0-9]{1,2})?$/", $number)) {
+        } elseif (ereg("^-?[0-9]+(\.[0-9]{3})*(,[0-9]{1,2})?$", $number)) {
 
             // $^
             $number = str_replace(".", "", $number);
@@ -362,11 +362,12 @@ class Ilib_Validator {
         $params = $this->parseParams($params, array('allow_empty'));
         if (in_array('allow_empty', $params) !== false && empty($string)) {
             return true;
-        } elseif (preg_match_all("/^[a-z0-9_-]+$/", $string)) {
+        } elseif (eregi("^[a-z0-9_-]+$", $string)) {
             return true;
         }
         return false;
     }
+
 
     /**
      * parses the params and returns an array
