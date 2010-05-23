@@ -43,7 +43,6 @@ class Ilib_Validator {
 
         $default_options = array('connection_internet' => true);
         $this->option = array_merge($default_options, $options);
-
     }
 
     /**
@@ -56,8 +55,8 @@ class Ilib_Validator {
      *
      * @return boolean true or false
      */
-    public function isEmail($email, $msg = '', $params = '') {
-
+    public function isEmail($email, $msg = '', $params = '')
+    {
         $params = $this->parseParams($params, array('allow_empty'));
 
         if (in_array('allow_empty', $params) AND empty($email)) {
@@ -83,7 +82,6 @@ class Ilib_Validator {
      */
     public function isDate($date, $msg = '', $params = '')
     {
-
         $params = $this->parseParams($params, array('allow_empty', 'allow_no_year'));
 
         if (in_array("allow_empty", $params) !== false && empty($date)) {
@@ -100,11 +98,11 @@ class Ilib_Validator {
         $d = "([0-3]?[0-9])";
         $m = "([0-1]?[0-9])";
         $y = "([0-9][0-9][0-9][0-9]|[0-9]?[0-9])";
-        $s = "(-|\.|/| )";
+        $s = "(-|\.|\/| )";
 
-        if (ereg("^".$d.$s.$m.$s.$y."$", $date, $parts)) {
+        if (preg_match("/^".$d.$s.$m.$s.$y."$/", $date, $parts)) {
             // true
-        } elseif (ereg("^".$d.$s.$m."$", $date, $parts) && in_array("allow_no_year", $params) !== false) {
+        } elseif (preg_match("/^".$d.$s.$m."$/", $date, $parts) && in_array("allow_no_year", $params) !== false) {
             $parts[5] = date("Y");
             // true
         } else {
@@ -143,17 +141,14 @@ class Ilib_Validator {
         // m: 00-59
         // s: 00-59
 
-
         $t = "([0-2]?[0-9])";
         $m = "([0-5][0-9])";
         $s = "([0-5][0-9])";
         $i = "(\:)";
 
-        if (ereg("^".$t.$i.$m.$i.$s."$", $time, $parts)) {
+        if (preg_match("/^".$t.$i.$m.$i.$s."$/", $time, $parts)) {
             // true
-
-        } elseif (ereg("^".$t.$i.$m."$", $time, $parts) && in_array("must_have_second", $params) === false) {
-
+        } elseif (preg_match("/^".$t.$i.$m."$/", $time, $parts) && in_array("must_have_second", $params) === false) {
             $parts[5] = '00';
             // true
         } else {

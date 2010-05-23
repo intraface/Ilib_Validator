@@ -1,6 +1,4 @@
 <?php
-error_reporting(0);
-
 require_once 'PHPUnit/Framework.php';
 
 require_once '../src/Ilib/Validator.php';
@@ -32,19 +30,19 @@ class Ilib_ValidatorTest extends PHPUnit_Framework_TestCase
 
     function testEmailReturnsFalseOnInvalidEmail()
     {
-        $validator = new Ilib_Validator(new Ilib_Error);
+        $validator = new Ilib_Validator(new Ilib_Error, array('connection_internet' => false));
         $this->assertFalse($validator->isEmail('all_worong', 'not valid'));
     }
 
     function testEmailReturnsFalseOnInvalidDomain()
     {
-        $validator = new Ilib_Validator(new Ilib_Error);
+        $validator = new Ilib_Validator(new Ilib_Error, array('connection_internet' => true));
         $this->assertFalse($validator->isEmail('test@this-cant-be-a-valid-domain.com', 'not valid'));
     }
 
     function testEmailReturnsTrueOnValidEmail()
     {
-        $validator = new Ilib_Validator(new Ilib_Error);
+        $validator = new Ilib_Validator(new Ilib_Error, array('connection_internet' => false));
         $this->assertTrue($validator->isEmail('support@intraface.dk', 'valid'));
     }
 
