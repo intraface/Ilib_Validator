@@ -1,7 +1,7 @@
 <?php
 require_once 'PHPUnit/Framework.php';
 
-require_once '../src/Ilib/Validator.php';
+require_once dirname(__FILE__) . '/../src/Ilib/Validator.php';
 require_once 'Ilib/Error.php';
 
 class Ilib_ValidatorTest extends PHPUnit_Framework_TestCase
